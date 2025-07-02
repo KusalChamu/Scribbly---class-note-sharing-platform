@@ -1,22 +1,76 @@
 import express from "express";
+import bodyParser from "body-parser";
 import mongoose from "mongoose";
-import dotenv from "dotenv";
+import User from "./models/Users.js";
 
-// Importing express module 
 const app = express();
-dotenv.config(); // Load environment variables from .env file
-// calling the function. This returns a object of type express
 
-// this app has http methods like get, post, put, delete etc.
+// request valata athara madiyek set kra gnnva=requests manage kranna.
+// req.body gen pilivelata data ganna thami meka pavichchi kranne.
+app.use(bodyParser.json());
+//app kiyana eken avith thiyenne, http requests yavanna ha ganna puluvan his thanak
 
-const PORT = process.env.PORT || 7000; // Use PORT from .env or default to 7000
-const MONGO_URL = process.env.MONGO_URL;
+mongoose.connect("mongodb+srv://admin:12345@cluster0.irpqghg.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0").then(() => { 
+    console.log("Connected to MongoDB database");
+}).catch(() => { 
+    console.log("Failed to connect to MongoDB database");
+})
 
-mongoose.connect(MONGO_URL).then(() => {
-    console.log("Database connected successfully.");
-    app.listen(PORT, () => {
-        console.log(`Server is running on port ${PORT}`);
+app.get("/",
+    (req, res) => {
+        User.find().then((response) => {
+            res.json({
+                users: response
+            });
+        })
+        
     });
-}).catch((error) => {
-    console.error("Database connection failed:", error);
-});
+
+app.delete("/",
+    (req, res) => {
+        res.json(
+            {message: "Delete response send"}
+        )
+        console.log("This is a delete request");
+    });
+
+app.post("/",
+    (req, res) => { 
+        
+
+        const user = new User(
+            {
+                FirstName: req.body.FirstName,
+                LastName: req.body.LastName, 
+                UserName: req.body.UserName,
+                Email: req.body.Email,
+                Password: req.body.Password
+            }
+        );
+        user.save().then(() => {
+            res.json({
+                message: "User data saved successfully.",
+                user: user
+            })
+        }).catch((error) => {
+            res.json({
+                message: "Failed to save user."})
+        }); 
+        
+    
+    }
+)
+
+
+
+
+// starting the backend    
+app.listen(3000, () => console.log("Server is running on port 3000"));
+
+
+// mongodb+srv://admin:12345@cluster0.irpqghg.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+   // FirstName: req.body.FirstName,
+            // LastName: req.body.LastName,
+            // UserName: req.body.UserName,
+            // Email: req.body.Email,
+            // Password: req.body.Password
