@@ -1,23 +1,17 @@
 import express from "express";
+import bodyParser from "body-parser";
+import mongoose from "mongoose";
 
 const app = express();
+
+// request valata athara madiyek set kra gnnva=requests manage kranna.
+// req.body gen pilivelata data ganna thami meka pavichchi kranne.
+app.use(bodyParser.json());
 //app kiyana eken avith thiyenne, http requests yavanna ha ganna puluvan his thanak
 
-// const mongoose = require("mongoose");
-
- // Load environment variables from .env file
-// calling the function. This returns a object of type express
-
-// mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true})
-// const db = mongoose.connection;
-// db.on('error', (error) => {
-//     console.error("Database connection error:", error);
-// });
-
-// db.once('open', () => {
-//     console.log("Database connected successfully.");
-
-// Postman is a http request sending client.
+mongoose.connect("mongodb+srv://admin:12345@cluster0.irpqghg.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0").then(() => { 
+    console.log("Connected to MongoDB database");
+})
 
 app.get("/",
     (req, res) => {
@@ -25,7 +19,9 @@ app.get("/",
         res.json(
             {message: "response send"}
         )
-        console.log("This is a get request");
+        console.log(req.body
+        
+        );
         
     });
 
@@ -51,3 +47,6 @@ app.post("/",
 
 // starting the backend    
 app.listen(3000, () => console.log("Server is running on port 3000"));
+
+
+// mongodb+srv://admin:12345@cluster0.irpqghg.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
