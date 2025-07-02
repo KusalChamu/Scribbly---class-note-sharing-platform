@@ -1,22 +1,53 @@
 import express from "express";
-import mongoose from "mongoose";
-import dotenv from "dotenv";
 
-// Importing express module 
 const app = express();
-dotenv.config(); // Load environment variables from .env file
+//app kiyana eken avith thiyenne, http requests yavanna ha ganna puluvan his thanak
+
+// const mongoose = require("mongoose");
+
+ // Load environment variables from .env file
 // calling the function. This returns a object of type express
 
-// this app has http methods like get, post, put, delete etc.
+// mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true})
+// const db = mongoose.connection;
+// db.on('error', (error) => {
+//     console.error("Database connection error:", error);
+// });
 
-const PORT = process.env.PORT || 7000; // Use PORT from .env or default to 7000
-const MONGO_URL = process.env.MONGO_URL;
+// db.once('open', () => {
+//     console.log("Database connected successfully.");
 
-mongoose.connect(MONGO_URL).then(() => {
-    console.log("Database connected successfully.");
-    app.listen(PORT, () => {
-        console.log(`Server is running on port ${PORT}`);
+// Postman is a http request sending client.
+
+app.get("/",
+    (req, res) => {
+        // triggering a response for a request
+        res.json(
+            {message: "response send"}
+        )
+        console.log("This is a get request");
+        
     });
-}).catch((error) => {
-    console.error("Database connection failed:", error);
-});
+
+app.delete("/",
+    (req, res) => {
+        res.json(
+            {message: "Delete response send"}
+        )
+        console.log("This is a delete request");
+    });
+
+app.post("/",
+    (req, res) => { 
+        res.json(
+            {message: "Post response send"}
+        )
+        console.log("This is a post request");
+    }
+)
+
+
+
+
+// starting the backend    
+app.listen(3000, () => console.log("Server is running on port 3000"));
