@@ -1,6 +1,7 @@
 import express from "express";
 import bodyParser from "body-parser";
 import mongoose from "mongoose";
+import User from "./models/Users.js";
 
 const app = express();
 
@@ -11,17 +12,17 @@ app.use(bodyParser.json());
 
 mongoose.connect("mongodb+srv://admin:12345@cluster0.irpqghg.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0").then(() => { 
     console.log("Connected to MongoDB database");
+}).catch(() => { 
+    console.log("Failed to connect to MongoDB database");
 })
 
 app.get("/",
     (req, res) => {
-        // triggering a response for a request
-        res.json(
-            {message: "response send"}
-        )
-        console.log(req.body
-        
-        );
+        User.find().then((response) => {
+            res.json({
+                users: response
+            });
+        })
         
     });
 
@@ -35,10 +36,28 @@ app.delete("/",
 
 app.post("/",
     (req, res) => { 
-        res.json(
-            {message: "Post response send"}
-        )
-        console.log("This is a post request");
+        
+
+        const user = new User(
+            {
+                FirstName: req.body.FirstName,
+                LastName: req.body.LastName, 
+                UserName: req.body.UserName,
+                Email: req.body.Email,
+                Password: req.body.Password
+            }
+        );
+        user.save().then(() => {
+            res.json({
+                message: "User data saved successfully.",
+                user: user
+            })
+        }).catch((error) => {
+            res.json({
+                message: "Failed to save user."})
+        }); 
+        
+    
     }
 )
 
@@ -50,3 +69,8 @@ app.listen(3000, () => console.log("Server is running on port 3000"));
 
 
 // mongodb+srv://admin:12345@cluster0.irpqghg.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+   // FirstName: req.body.FirstName,
+            // LastName: req.body.LastName,
+            // UserName: req.body.UserName,
+            // Email: req.body.Email,
+            // Password: req.body.Password
