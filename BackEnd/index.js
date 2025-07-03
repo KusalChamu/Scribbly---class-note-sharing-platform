@@ -2,6 +2,7 @@ import express from "express";
 import bodyParser from "body-parser";
 import mongoose from "mongoose";
 import User from "./models/Users.js";
+import usersRouter from "./routes/usersRouter.js";
 
 const app = express();
 
@@ -16,15 +17,7 @@ mongoose.connect("mongodb+srv://admin:12345@cluster0.irpqghg.mongodb.net/?retryW
     console.log("Failed to connect to MongoDB database");
 })
 
-app.get("/",
-    (req, res) => {
-        User.find().then((response) => {
-            res.json({
-                users: response
-            });
-        })
-        
-    });
+app.use("/users", usersRouter)
 
 app.delete("/",
     (req, res) => {
